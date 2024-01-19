@@ -7,7 +7,7 @@ export const secretKey = 'votre_clé_secrète';
 //Connexion à la base de données 
 const connectDB = async () => {
   try {
-    const uri = 'mongodb+srv://root:root@cluster0.rkawcvi.mongodb.net/?retryWrites=true&w=majority';
+    const uri ="mongodb+srv://root:root@databasev1.ifn67gy.mongodb.net/?retryWrites=true&w=majority";
 
     await mongoose.connect(uri);
     console.log('Connexion à la base de données établie');
