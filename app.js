@@ -1,6 +1,7 @@
 // app.js
 import express from 'express';
 import authRoute from './src/routes/auth.js';
+import productRoute from "./src/routes/product.js";
 import connectDB from './config/db.config.js';
 import bodyParser from 'body-parser';
 import cors from 'cors'; 
@@ -24,6 +25,7 @@ app.use(cors());
 
 // Utilisation des routes
 app.use('/auth', authRoute);
+app.use('/product', productRoute); // Utilisez la route du produit
 
 
 app.listen(port, () => {
