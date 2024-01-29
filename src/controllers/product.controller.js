@@ -1,6 +1,9 @@
 // controllers/product.controller.js
 import axios from "axios";
-import googleTrendsApi from "google-trends-api";
+import NewsAPI from "newsapi"; // Assurez-vous d'installer cette bibliothèque (npm install newsapi)
+
+
+const newsApiKey = "3ae6919659a44d84ba1cf314087964d9"; // Remplacez par votre clé API de l'API de nouvelles
 
 //route api info barcodde
 const getProductByBarcode = async (req, res) => {
@@ -38,8 +41,28 @@ const getProductByBarcode = async (req, res) => {
   }
 };
 
-//google trends
-const getGoogleTrends = async (req, res) => {
+//news
+
+
+const getNewsByKeyword = async (keyword) => {
+  try {
+    const newsapi = new NewsAPI(newsApiKey);
+    const response = await newsapi.v2.everything({
+      q: keyword,
+      language: "fr", // Vous pouvez ajuster la langue en fonction de vos besoins
+    });
+
+    return response.articles;
+  } catch (error) {
+    console.error(
+      "Erreur lors de la recherche des actualités :",
+      error.message
+    );
+    throw new Error("Erreur lors de la recherche des actualités");
+  }
+};
+
+const getNews = async (req, res) => {
   try {
     const { keyword } = req.params;
 
@@ -49,33 +72,24 @@ const getGoogleTrends = async (req, res) => {
         .json({ error: "Mot-clé manquant dans les paramètres de la requête." });
     }
 
-    const trendsData = await googleTrendsApi.interestOverTime({
-      keyword: keyword,
-    });
+    const newsData = await getNewsByKeyword(keyword);
 
-    if (trendsData) {
-      const formattedData = {
-        keyword: keyword,
-        trends: trendsData,
-        message: "Données de tendance Google récupérées avec succès.",
-      };
-      res.json(formattedData);
-    } else {
-      res.status(404).json({
-        keyword: keyword,
-        message:
-          "Aucune donnée de tendance Google trouvée pour le mot-clé spécifié.",
-      });
-    }
+    const formattedData = {
+      keyword,
+      news: newsData,
+      message: "Actualités récupérées avec succès.",
+    };
+
+    res.json(formattedData);
   } catch (error) {
     console.error(
-      "Erreur lors de la recherche des tendances Google :",
+      "Erreur lors de la recherche des actualités :",
       error.message
     );
     res.status(500).json({
-      error: "Erreur serveur lors de la recherche des tendances Google.",
+      error: "Erreur serveur lors de la recherche des actualités.",
     });
   }
 };
 
-export default { getProductByBarcode, getGoogleTrends };
+export default { getProductByBarcode, getNews };
