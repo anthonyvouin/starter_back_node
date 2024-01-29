@@ -26,15 +26,9 @@ const getProductByBarcode = async (req, res) => {
         description:
           response.data.product.generic_name ||
           response.data.product.ingredients_text,
-        brand: response.data.product.brands,
         category: response.data.product.categories,
-        image: response.data.product.image_url,
         ingredients: response.data.product.ingredients_text,
         nutriments: response.data.product.nutriments,
-        labels: response.data.product.labels_tags,
-        additives: response.data.product.additives_tags,
-        allergens: response.data.product.allergens_tags,
-        packaging: response.data.product.packaging,
         countries: response.data.product.countries_tags,
         // Ajoutez d'autres champs que vous souhaitez récupérer
       };
