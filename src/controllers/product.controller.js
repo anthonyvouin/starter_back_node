@@ -96,4 +96,5 @@ const getNews = async (req, res) => {
   }
 };
 
+
 export default { getProductByBarcode, getNews };
