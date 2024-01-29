@@ -6,6 +6,8 @@ const router = express.Router();
 
 router.post("/search-by-barcode", productController.getProductByBarcode);
 router.get("/getNews/:keyword", productController.getNews);
+router.get("/getProductStoresNearby/:productName", productController.getProductStoresNearby
+);
 
 
 export default router;

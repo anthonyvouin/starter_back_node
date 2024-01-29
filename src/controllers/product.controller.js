@@ -96,5 +96,51 @@ const getNews = async (req, res) => {
   }
 };
 
+// gps
+const getProductStoresNearby = async (req, res) => {
+  try {
+    const { productName } = req.params;
 
-export default { getProductByBarcode, getNews };
+    if (!productName) {
+      return res
+        .status(400)
+        .json({
+          error: "Nom du produit manquant dans les paramètres de la requête.",
+        });
+    }
+
+    // Utilisez l'API Nominatim de OpenStreetMap pour rechercher des magasins à proximité en France
+    const response = await axios.get(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${productName}&limit=5&countrycodes=fr&bounded=1`
+    );
+
+    if (response.data && response.data.length > 0) {
+      // Formatez les données des magasins à proximité
+      const storesNearby = response.data.map((store) => ({
+        name: store.display_name,
+        address: store.address,
+        // Vous pouvez ajouter d'autres informations pertinentes ici
+      }));
+
+      res.json(storesNearby);
+    } else {
+      res
+        .status(404)
+        .json({
+          error:
+            "Aucun magasin trouvé à proximité vendant ce produit en France.",
+        });
+    }
+  } catch (error) {
+    console.error(
+      "Erreur lors de la recherche des magasins à proximité :",
+      error.message
+    );
+    res.status(500).json({
+      error: "Erreur serveur lors de la recherche des magasins à proximité.",
+    });
+  }
+};
+
+
+export default { getProductByBarcode, getNews, getProductStoresNearby };
